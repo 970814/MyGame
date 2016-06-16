@@ -3,7 +3,7 @@ package parasite;
 import controller.ControlMapping;
 
 /**
- * Created by Administrator on 2016/4/28.
+ * 用于管理输入键,如果包含输入建,则执行相应的动作;
  */
 public class ControlSet extends ControlMapping implements Parasites {
     private int direction;

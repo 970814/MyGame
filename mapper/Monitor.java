@@ -1,7 +1,5 @@
 package mapper;
 
-import controller.Controller;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -18,7 +16,7 @@ public class Monitor extends JFrame implements Runnable {
     boolean isFocus = false;
 
     public Monitor(Painter painter) {
-        setLayout(new GridLayout(0, 2));
+//        setLayout(new GridLayout(0, 2));
         this.painter = painter;
 
         painter.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
@@ -29,7 +27,7 @@ public class Monitor extends JFrame implements Runnable {
                 setLineWrap(true);
             }
         };
-        add(textPane);
+//        add(textPane);
         add(painter);
 
 
@@ -55,6 +53,7 @@ public class Monitor extends JFrame implements Runnable {
             public void focusGained(FocusEvent e) {
                 textPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true), "Busying..."));
                 painter.setBorder(BorderFactory.createLineBorder(Color.PINK, 3, true));
+                painter.getDataModel().workAll();
             }
 
             @Override
@@ -64,6 +63,7 @@ public class Monitor extends JFrame implements Runnable {
                 TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.PINK, 1, true), "Idle");
                 border.setTitleFont(new Font("Times New Roman", Font.BOLD, 30));
                 textPane.setBorder(border);
+                painter.getDataModel().sleepAll();
             }
         });
         getRootPane().addMouseListener(mouseAdapter);

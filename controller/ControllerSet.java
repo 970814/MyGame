@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * Respond to all keyboard events.
  * @see ControlSet
  */
-public class Controller extends LinkedList<Controllable> implements KeyListener {
+public class ControllerSet extends LinkedList<Controllable> implements KeyListener {
     /**
      * current key code.
      */

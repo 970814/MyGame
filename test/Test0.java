@@ -6,33 +6,71 @@ import animal.Mouse;
 import animal.Snake;
 import foodmaker.FoodMaker;
 import parasite.ControlSet;
-import controller.Controller;
+import controller.ControllerSet;
 import datamodel.MapDataModel;
 import mapper.Monitor;
 import mapper.Painter;
+import systemcontrol.SystemController;
 
 public class Test0 {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            final Controller controller = new Controller();
+            final ControllerSet controllerSet = new ControllerSet();
             ControlSet set0 = new ControlSet();
-            set0.mapping(40, 39, 38, 37);
+            set0.mapping(40, 39, 38, 37);// down right up left
             ControlSet set1 = new ControlSet();
-            set1.mapping(83, 68, 87, 65);
+            set1.mapping(83, 68, 87, 65);// S F W A
             ControlSet set2 = new ControlSet();
-            set2.mapping(98, 102, 104, 100, 97, 99, 105, 103);
-            controller.add(set0);
-            controller.add(set1);
-            controller.add(set2);
+            set2.mapping(98, 102, 104, 100, 97, 99, 105, 103);// num. 2 6 8 4 1 3 9 7
+            controllerSet.add(set0);
+            controllerSet.add(set1);
+            controllerSet.add(set2);
 
 
-            MapDataModel dataModel = new MapDataModel(35, 40, 0.0);
-            FoodMaker foodMaker = new FoodMaker(dataModel);
-            foodMaker.mapping(49);
-            controller.add(foodMaker);
+            MapDataModel dataModel = new MapDataModel(50, 25, 0.0);
+//            FoodMaker foodMaker = new FoodMaker(dataModel);
+//            foodMaker.mapping(49);
+
+            SystemController sleepAll = new SystemController(122) {//F11
+                private boolean isSleep = false;
+
+                @Override
+                public void doMainThing() {
+                    if (isSleep) {
+                        dataModel.workAll();
+                    } else {
+                        dataModel.sleepAll();
+                    }
+                    isSleep = !isSleep;
+                }
+            };
+            SystemController newSnake = new SystemController(112) {//F1
+                @Override
+                public void doMainThing() {
+                    dataModel.addWithStart(new Snake(dataModel) {
+                        {
+                            parasitic(set2);
+                        }
+                    });
+                }
+            };
+
+            controllerSet.add(changeStates);
+            controllerSet.add(sleepAll);
+            controllerSet.add(newSnake);
+
+            controllerSet.add(foodMaker);
+
             Painter painter = new Painter(dataModel);
             Monitor monitor = new Monitor(painter);
-            monitor.addControllerListener(controller);
+            SystemController changeStates = new SystemController(123) {//F12
+                @Override
+                public void doMainThing() {
+                    monitor.is
+                }
+            };
+
+            monitor.addControllerListener(controllerSet);
             monitor.setVisible(true);
             dataModel.add(new Mouse(dataModel) {
                 {
@@ -47,23 +85,18 @@ public class Test0 {
             dataModel.add(new Mouse(dataModel) {
 
             });
-            dataModel.add(new Mouse(dataModel) {
-                {
-                    parasitic(set2);
-                }
-            });
-            dataModel.add(new Snake(dataModel) {
-                {
-                    parasitic(set0);
-                    speed(150);
-                }
-            });
-            dataModel.add(new Snake(dataModel) {
-                {
+//            dataModel.add(new Mouse(dataModel) {
+//                {
+//                    parasitic(set2);
+//                }
+//            });
+//            dataModel.add(new Snake(dataModel) {
+//                {
 //                    parasitic(set0);
 //                    speed(150);
-                }
-            });
+//                }
+//            });
+            dataModel.sleepAll();
             dataModel.startAll();
         });
     }

@@ -1,7 +1,9 @@
 package controller;
 
+import java.util.function.Consumer;
+
 /**
- * Created by Administrator on 2016/4/28.
+ * 由于按键映射;
  */
 public abstract class ControlMapping implements Controllable {
     protected int[] map;
@@ -9,6 +11,7 @@ public abstract class ControlMapping implements Controllable {
     public ControlMapping(int... keys) {
         mapping(keys);
     }
+
     public void mapping(int... keys) {
         map = keys;
     }

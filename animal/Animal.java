@@ -20,9 +20,10 @@ public abstract class Animal extends LinkedList<DataUnit> implements DataConstan
     protected final DataModel dataModel;
     private Parasites parasites = null;
 
-    public void speed(double v) {
+    public void speed(double v) {//+ up - down
         if (delay - v < 40.0) {
             System.out.println("已是最大速度!");
+            delay = 40.0;
             return;
         }
         delay -= v;
@@ -85,7 +86,12 @@ public abstract class Animal extends LinkedList<DataUnit> implements DataConstan
                 remove(d);
             }
         }
-        System.out.println("An animal died~!");
+        if (this instanceof Snake) {
+            System.out.print("snake");
+        } else if (this instanceof Mouse) {
+            System.out.println("mouse");
+        }
+        System.out.println(" died~!");
     }
 
     @Override

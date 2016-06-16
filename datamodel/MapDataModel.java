@@ -1,9 +1,10 @@
 package datamodel;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import animal.Animal;
-import consumer.Consumer;
+import systemcontrol.SystemController;
 
 /**
  * Created by Administrator on 2016/4/24.
@@ -15,7 +16,9 @@ public class MapDataModel extends DataModel {
 	private Random random = new Random();
 	private List<List<DataUnit>> listList = null;
 
-
+	/**
+	 * 定位到地图的某个有x,y指定的位置,并返回这个对象
+     */
 	public DataUnit locate(int x, int y) {
 		if (listList == null) {
 			throw new NullPointerException("listList == null");
@@ -47,7 +50,7 @@ public class MapDataModel extends DataModel {
 	}
 
 	/**
-	 * @return If generate success returns TRUE, otherwise it returns FALSE
+	 * 随机选地图某个位置设置石头,如果该位置不为空则设置为石头,返回真,否则返回假
 	 */
 	public boolean randomRock() {
 		int x = random.nextInt(width) + 1;
@@ -59,6 +62,9 @@ public class MapDataModel extends DataModel {
 		return false;
 	}
 
+	/**
+	 * 产生石头
+	 */
 	private void productRock() {
 		int rocks = 0;
 		while (rocks < rockCount) {
@@ -67,6 +73,10 @@ public class MapDataModel extends DataModel {
 			}
 		}
 	}
+
+	/**
+	 * 杀掉一个进程;
+     */
 	@Override
 	public void kill(int hashCode) {
 		super.forEach(runnable -> {
@@ -79,12 +89,16 @@ public class MapDataModel extends DataModel {
 			}
 		});
 	}
+
 	public MapDataModel(int width, int height, double density) {
 		super(width, height, density);
 		new_List_Map();
 		productRock();
 	}
 
+	/**
+	 * 返回在地图上的一个空位置
+     */
 	@Override
 	public DataUnit emptyLocation() {
 		int x;
@@ -96,9 +110,22 @@ public class MapDataModel extends DataModel {
 		return locate(x, y);
 	}
 
-	public void forEach(Consumer<DataUnit> consumer) {
+	public void forEachData(Consumer<DataUnit> consumer) {
 		for (List<DataUnit> list : listList) {
-			list.forEach(consumer::accept);
+			list.forEach(consumer);
 		}
 	}
+
+	public void workAll() {
+		super.forEach(runnable -> ((Animal) runnable).wakeUp());
+	}
+
+	public void sleepAll(){
+		super.forEach(runnable -> ((Animal) runnable).sleep());
+	}
+
+	public void addSystemController(SystemController systemController) {
+		systemController.setDataModel(this);
+	}
+
 }

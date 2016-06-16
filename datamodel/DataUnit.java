@@ -7,6 +7,7 @@ import java.awt.*;
  */
 @SuppressWarnings("serial")
 public class DataUnit extends Point {
+	private static Object lock = new Object();
 	public int getDirection() {
 		return direction;
 	}
@@ -26,7 +27,9 @@ public class DataUnit extends Point {
 	 * @return The thing.
      */
 	public int getValue() {
-		return value;
+		synchronized (lock) {
+			return value;
+		}
 	}
 
 	private volatile int value;// 存储的是

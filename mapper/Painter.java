@@ -2,8 +2,6 @@ package mapper;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import consumer.Consumer;
-import datamodel.DataUnit;
 import datamodel.MapDataModel;
 
 import javax.swing.JComponent;
@@ -29,19 +27,17 @@ public class Painter extends JComponent{
 		final Graphics2D d = (Graphics2D) g;
 		int w = getWidth();
 		int h = getHeight();
-		wh[0] = w / (dataModel.getWidth() + 1);
-		wh[1] = h / (dataModel.getHeight() + 1);
-
-		dataModel.forEach(new Consumer<DataUnit>() {
-			@Override
-			public void accept(DataUnit dataUnit) {
-				// d.drawString(dataPoint.toString(), baseX +
-				// dataPoint.x * pSize, baseY + dataPoint.y * pSize);
-				d.drawImage(ImageParser.parseOf(dataUnit), dataUnit.x
-						* wh[0], dataUnit.y * wh[1], wh[0], wh[1], null);
-			}
-		});
+		wh[0] = w / (dataModel.getWidth() + 6);
+		wh[1] = h / (dataModel.getHeight() + 5);
+		// d.drawString(dataPoint.toString(), baseX +
+		// dataPoint.x * pSize, baseY + dataPoint.y * pSize);
+		dataModel.forEachData(dataUnit -> d.drawImage(ImageParser.parseOf(dataUnit), dataUnit.x
+				* wh[0], dataUnit.y * wh[1], wh[0], wh[1], null));
 		d.setFont(d.getFont().deriveFont(20.0f));
 		d.drawString("HELLO, WORLD!" + paintCount++, w / 4, h / 4);
+	}
+
+	public MapDataModel getDataModel() {
+		return dataModel;
 	}
 }
